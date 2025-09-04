@@ -61,40 +61,45 @@ export default function LoanDataCurator() {
   const loadData = async () => {
     setLoading(true);
     try {
-      // First get total count for proper pagination
-      const { count, error: countError } = await supabase
-        .from('DataPts')
-        .select('*', { count: 'exact', head: true });
+      // Fetch all data points using pagination
+      let allData: DataPoint[] = [];
+      let page = 0;
+      const pageSize = 1000;
+      let hasMore = true;
 
-      if (countError) {
-        throw countError;
-      }
+      console.log('Loading all records...');
 
-      console.log(`Loading all ${count} records...`);
+      while (hasMore) {
+        let query = supabase
+          .from('DataPts')
+          .select('*');
 
-      // Load ALL records without any range limits
-      let query = supabase
-        .from('DataPts')
-        .select('*');
-      
-      if (selectedCategory !== 'all') {
-        query = query.eq('Category', selectedCategory);
+        if (selectedCategory !== 'all') {
+          query = query.eq('Category', selectedCategory);
+        }
+
+        const { data, error } = await query
+          .order('status', { ascending: true }) // pending comes before others
+          .order('Key', { ascending: true })
+          .range(page * pageSize, (page + 1) * pageSize - 1);
+
+        if (error) {
+          throw error;
+        }
+
+        if (data && data.length > 0) {
+          allData = [...allData, ...data];
+          page++;
+        } else {
+          hasMore = false;
+        }
       }
       
-      // Prioritize pending records first, then reviewed ones
-      const { data, error } = await query
-        .order('status', { ascending: true }) // pending comes before others alphabetically
-        .order('Key', { ascending: true });
-      
-      if (error) {
-        throw error;
-      }
-      
-      console.log(`Loaded ${data?.length || 0} data points`);
+      console.log(`Loaded ${allData.length} data points`);
       
       // Separate pending and reviewed records
-      const pendingRecords = data?.filter(item => !item.status || item.status === 'pending') || [];
-      const reviewedRecords = data?.filter(item => item.status && item.status !== 'pending') || [];
+      const pendingRecords = allData.filter(item => !item.status || item.status === 'pending');
+      const reviewedRecords = allData.filter(item => item.status && item.status !== 'pending');
       
       // Put pending records first so user continues from unprocessed items
       const sortedData = [...pendingRecords, ...reviewedRecords];
@@ -118,20 +123,44 @@ export default function LoanDataCurator() {
 
   const loadStats = async () => {
     try {
-      // Load ALL records for accurate statistics
-      const { data, error } = await supabase
+      // Get the total count first for accuracy
+      const { count, error: countError } = await supabase
         .from('DataPts')
-        .select('status');
-      
-      if (error) {
-        throw error;
+        .select('*', { count: 'exact', head: true });
+
+      if (countError) {
+        throw countError;
+      }
+
+      // Fetch all status data using pagination for accurate stats
+      let allStatusData: { status: string }[] = [];
+      let page = 0;
+      const pageSize = 1000;
+      let hasMore = true;
+
+      while(hasMore) {
+        const { data, error } = await supabase
+          .from('DataPts')
+          .select('status')
+          .range(page * pageSize, (page + 1) * pageSize - 1);
+
+        if (error) {
+          throw error;
+        }
+
+        if (data && data.length > 0) {
+          allStatusData = [...allStatusData, ...data];
+          page++;
+        } else {
+          hasMore = false;
+        }
       }
       
-      const total = data.length;
-      const reviewed = data.filter(item => item.status && item.status !== 'pending').length;
-      const keep = data.filter(item => item.status === 'keep').length;
-      const deleteCount = data.filter(item => item.status === 'delete').length;
-      const favorite = data.filter(item => item.status === 'favorite').length;
+      const total = count || 0;
+      const reviewed = allStatusData.filter(item => item.status && item.status !== 'pending').length;
+      const keep = allStatusData.filter(item => item.status === 'keep').length;
+      const deleteCount = allStatusData.filter(item => item.status === 'delete').length;
+      const favorite = allStatusData.filter(item => item.status === 'favorite').length;
       
       setStats({ total, reviewed, keep, delete: deleteCount, favorite });
       console.log(`Stats updated: ${total} total, ${reviewed} reviewed`);
@@ -143,16 +172,31 @@ export default function LoanDataCurator() {
 
   const loadCategories = async () => {
     try {
-      const { data, error } = await supabase
-        .from('DataPts')
-        .select('Category')
-        .order('Category');
-      
-      if (error) {
-        throw error;
+      // Fetch all categories using pagination
+      let allCategoryData: { Category: string }[] = [];
+      let page = 0;
+      const pageSize = 1000;
+      let hasMore = true;
+
+      while(hasMore) {
+        const { data, error } = await supabase
+          .from('DataPts')
+          .select('Category')
+          .range(page * pageSize, (page + 1) * pageSize - 1);
+
+        if (error) {
+          throw error;
+        }
+
+        if (data && data.length > 0) {
+          allCategoryData = [...allCategoryData, ...data];
+          page++;
+        } else {
+          hasMore = false;
+        }
       }
       
-      const uniqueCategories = Array.from(new Set(data.map(item => item.Category)));
+      const uniqueCategories = Array.from(new Set(allCategoryData.map(item => item.Category))).sort();
       setCategories(uniqueCategories);
       
     } catch (error) {
