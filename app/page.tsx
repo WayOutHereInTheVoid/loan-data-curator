@@ -72,11 +72,10 @@ export default function LoanDataCurator() {
 
       console.log(`Loading all ${count} records...`);
 
-      // Load ALL records by setting a high limit and proper range
+      // Load ALL records without any range limits
       let query = supabase
         .from('DataPts')
-        .select('*')
-        .range(0, Math.max(count || 2000, 2000)); // Ensure we get all records
+        .select('*');
       
       if (selectedCategory !== 'all') {
         query = query.eq('Category', selectedCategory);
@@ -122,8 +121,7 @@ export default function LoanDataCurator() {
       // Load ALL records for accurate statistics
       const { data, error } = await supabase
         .from('DataPts')
-        .select('status')
-        .range(0, 5000); // Ensure we get all records for stats
+        .select('status');
       
       if (error) {
         throw error;
@@ -148,7 +146,6 @@ export default function LoanDataCurator() {
       const { data, error } = await supabase
         .from('DataPts')
         .select('Category')
-        .range(0, 5000) // Get all categories
         .order('Category');
       
       if (error) {
