@@ -9,6 +9,20 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ueedkletrke
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlZWRrbGV0cmtlbWRyeGJpeHB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU4NTczMjYsImV4cCI6MjA1MTQzMzMyNn0.Js8dQBEPxNuFxv7vxRBcOLEz-GVfXMKJHO3sEMTFGUk';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Utility function to safely extract error messages
+const getErrorMessage = (error: unknown): string => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  if (typeof error === 'string') {
+    return error;
+  }
+  if (error && typeof error === 'object' && 'message' in error) {
+    return String(error.message);
+  }
+  return 'An unexpected error occurred';
+};
+
 interface DataPoint {
   Key: string;
   Category: string;
@@ -202,7 +216,7 @@ export default function LoanDataCurator() {
     } catch (error) {
       console.error('Error updating data point:', error);
       setUpdateStatus('error');
-      setErrorMessage(`Failed to save: ${error.message}`);
+      setErrorMessage(`Failed to save: ${getErrorMessage(error)}`);
       
       // Clear error after 5 seconds
       setTimeout(() => {
@@ -294,7 +308,7 @@ export default function LoanDataCurator() {
     } catch (error) {
       console.error('Error undoing action:', error);
       setUpdateStatus('error');
-      setErrorMessage(`Failed to undo: ${error.message}`);
+      setErrorMessage(`Failed to undo: ${getErrorMessage(error)}`);
       setTimeout(() => {
         setUpdateStatus('idle');
         setErrorMessage('');
