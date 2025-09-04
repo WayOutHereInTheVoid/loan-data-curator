@@ -70,6 +70,13 @@ export default function LoanDataCurator() {
         throw countError;
       }
 
+      console.log(`DEBUG: Count query returned: ${count} total records`);
+      
+      if (!count || count === 0) {
+        console.error('WARNING: Count query returned 0 or null records');
+        return;
+      }
+
       console.log(`Loading all ${count} records...`);
 
       // Load ALL records without any range limits
@@ -90,6 +97,13 @@ export default function LoanDataCurator() {
         throw error;
       }
       
+      console.log(`DEBUG: Query returned ${data?.length || 0} data points`);
+      console.log(`DEBUG: Expected ${count} records, got ${data?.length || 0} records`);
+      
+      if (data && data.length < count) {
+        console.warn(`WARNING: Data length (${data.length}) is less than count (${count}). Possible pagination issue.`);
+      }
+
       console.log(`Loaded ${data?.length || 0} data points`);
       
       // Separate pending and reviewed records
@@ -127,11 +141,15 @@ export default function LoanDataCurator() {
         throw error;
       }
       
+      console.log(`DEBUG: Stats query returned ${data?.length || 0} records`);
+      
       const total = data.length;
       const reviewed = data.filter(item => item.status && item.status !== 'pending').length;
       const keep = data.filter(item => item.status === 'keep').length;
       const deleteCount = data.filter(item => item.status === 'delete').length;
       const favorite = data.filter(item => item.status === 'favorite').length;
+      
+      console.log(`DEBUG: Stats calculated - Total: ${total}, Reviewed: ${reviewed}, Keep: ${keep}, Delete: ${deleteCount}, Favorite: ${favorite}`);
       
       setStats({ total, reviewed, keep, delete: deleteCount, favorite });
       console.log(`Stats updated: ${total} total, ${reviewed} reviewed`);
