@@ -440,10 +440,10 @@ export default function LoanDataCurator() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading all {stats.total || '1721'} data points...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-400 mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading all {stats.total || '1721'} data points...</p>
         </div>
       </div>
     );
@@ -453,23 +453,23 @@ export default function LoanDataCurator() {
   const currentProgressPercentage = dataPoints.length > 0 ? ((currentIndex / dataPoints.length) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 p-4">
       {/* Header */}
       <div className="max-w-md mx-auto mb-6">
-        <div className="bg-white rounded-xl shadow-lg p-4 border border-gray-200">
+        <div className="bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-700">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-xl font-bold text-gray-800">Loan Data Curator</h1>
+            <h1 className="text-xl font-bold text-gray-100">Loan Data Curator</h1>
             <div className="flex space-x-2">
               <button
                 onClick={() => setShowStats(!showStats)}
-                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 text-gray-400 hover:bg-gray-700 rounded-lg transition-colors"
               >
                 <BarChart3 size={20} />
               </button>
               <button
                 onClick={undoLastAction}
                 disabled={actionHistory.length === 0 || updateStatus === 'saving'}
-                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+                className="p-2 text-gray-400 hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
               >
                 <RotateCcw size={20} />
               </button>
@@ -479,9 +479,9 @@ export default function LoanDataCurator() {
           {/* Update Status */}
           {updateStatus !== 'idle' && (
             <div className={`mb-4 p-2 rounded-lg flex items-center gap-2 text-sm ${
-              updateStatus === 'saving' ? 'bg-blue-50 text-blue-600' :
-              updateStatus === 'success' ? 'bg-green-50 text-green-600' :
-              'bg-red-50 text-red-600'
+              updateStatus === 'saving' ? 'bg-blue-900/80 text-blue-300' :
+              updateStatus === 'success' ? 'bg-green-900/80 text-green-300' :
+              'bg-red-900/80 text-red-300'
             }`}>
               {updateStatus === 'saving' && <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />}
               {updateStatus === 'success' && <CheckCircle size={16} />}
@@ -494,13 +494,13 @@ export default function LoanDataCurator() {
           
           {/* Overall Progress Bar */}
           <div className="mb-2">
-            <div className="flex justify-between text-xs text-gray-600 mb-1">
+            <div className="flex justify-between text-xs text-gray-400 mb-1">
               <span>Overall Progress</span>
               <span>{stats.reviewed} of {stats.total} reviewed</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+            <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
               <div
-                className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                className="bg-green-500 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progressPercentage}%` }}
               ></div>
             </div>
@@ -508,19 +508,19 @@ export default function LoanDataCurator() {
 
           {/* Current Session Progress */}
           <div className="mb-4">
-            <div className="flex justify-between text-xs text-gray-600 mb-1">
+            <div className="flex justify-between text-xs text-gray-400 mb-1">
               <span>Current View</span>
               <span>{currentIndex + 1} of {dataPoints.length}</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray-700 rounded-full h-2">
               <div
-                className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                className="bg-indigo-500 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${currentProgressPercentage}%` }}
               ></div>
             </div>
           </div>
           
-          <div className="flex justify-between text-sm text-gray-600">
+          <div className="flex justify-between text-sm text-gray-400">
             <span>{Math.round(progressPercentage)}% complete overall</span>
             <span>{stats.total - stats.reviewed} remaining</span>
           </div>
@@ -530,7 +530,7 @@ export default function LoanDataCurator() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg text-sm"
+              className="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg text-sm text-gray-200"
               disabled={updateStatus === 'saving'}
             >
               <option value="all">All Categories ({stats.total} total)</option>
@@ -544,20 +544,20 @@ export default function LoanDataCurator() {
           {showStats && (
             <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
               <div className="text-center">
-                <div className="font-semibold text-green-600">{stats.keep}</div>
-                <div className="text-gray-600">Keep</div>
+                <div className="font-semibold text-green-400">{stats.keep}</div>
+                <div className="text-gray-400">Keep</div>
               </div>
               <div className="text-center">
-                <div className="font-semibold text-red-600">{stats.delete}</div>
-                <div className="text-gray-600">Delete</div>
+                <div className="font-semibold text-red-400">{stats.delete}</div>
+                <div className="text-gray-400">Delete</div>
               </div>
               <div className="text-center">
-                <div className="font-semibold text-purple-600">{stats.favorite}</div>
-                <div className="text-gray-600">Favorites</div>
+                <div className="font-semibold text-purple-400">{stats.favorite}</div>
+                <div className="text-gray-400">Favorites</div>
               </div>
               <div className="text-center">
-                <div className="font-semibold text-gray-600">{stats.total - stats.reviewed}</div>
-                <div className="text-gray-600">Pending</div>
+                <div className="font-semibold text-gray-400">{stats.total - stats.reviewed}</div>
+                <div className="text-gray-400">Pending</div>
               </div>
             </div>
           )}
@@ -569,7 +569,7 @@ export default function LoanDataCurator() {
         <div className="max-w-md mx-auto">
           <div
             ref={cardRef}
-            className={`bg-white rounded-xl shadow-xl p-6 border border-gray-200 transform transition-transform duration-200 ${
+            className={`bg-gray-800 rounded-xl shadow-xl p-6 border border-gray-700 transform transition-transform duration-200 ${
               updateStatus === 'saving' ? 'opacity-50 cursor-wait' : 'cursor-grab active:cursor-grabbing'
             }`}
             style={{
@@ -585,25 +585,25 @@ export default function LoanDataCurator() {
             onTouchEnd={handleEnd}
           >
             <div className="text-center">
-              <div className="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium mb-4">
+              <div className="inline-block px-3 py-1 bg-indigo-900/80 text-indigo-300 rounded-full text-sm font-medium mb-4">
                 {currentDataPoint.Category}
               </div>
               
-              <h2 className="text-xl font-bold text-gray-800 mb-2">
+              <h2 className="text-xl font-bold text-gray-100 mb-2">
                 {currentDataPoint["Data Point"]}
               </h2>
               
-              <p className="text-gray-600 mb-2 text-sm">
+              <p className="text-gray-400 mb-2 text-sm">
                 Key: {currentDataPoint.Key}
               </p>
               
               {currentDataPoint.status && currentDataPoint.status !== 'pending' && (
                 <p className="text-sm mb-4">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    currentDataPoint.status === 'keep' ? 'bg-green-100 text-green-800' :
-                    currentDataPoint.status === 'delete' ? 'bg-red-100 text-red-800' :
-                    currentDataPoint.status === 'favorite' ? 'bg-purple-100 text-purple-800' :
-                    'bg-gray-100 text-gray-800'
+                    currentDataPoint.status === 'keep' ? 'bg-green-900/80 text-green-300' :
+                    currentDataPoint.status === 'delete' ? 'bg-red-900/80 text-red-300' :
+                    currentDataPoint.status === 'favorite' ? 'bg-purple-900/80 text-purple-300' :
+                    'bg-gray-700 text-gray-300'
                   }`}>
                     Already: {currentDataPoint.status}
                   </span>
@@ -625,28 +625,28 @@ export default function LoanDataCurator() {
             <button
               onClick={() => handleAction('delete')}
               disabled={updateStatus === 'saving'}
-              className="p-3 rounded-xl border-2 text-red-600 bg-red-50 border-red-200 hover:bg-red-100 transition-colors disabled:opacity-50"
+              className="p-3 rounded-xl border-2 text-red-400 bg-red-900/50 border-red-700 hover:bg-red-900 transition-colors disabled:opacity-50"
             >
               <Trash2 size={24} className="mx-auto" />
             </button>
             <button
               onClick={() => handleAction('notes')}
               disabled={updateStatus === 'saving'}
-              className="p-3 rounded-xl border-2 text-blue-600 bg-blue-50 border-blue-200 hover:bg-blue-100 transition-colors disabled:opacity-50"
+              className="p-3 rounded-xl border-2 text-blue-400 bg-blue-900/50 border-blue-700 hover:bg-blue-900 transition-colors disabled:opacity-50"
             >
               <MessageSquare size={24} className="mx-auto" />
             </button>
             <button
               onClick={() => handleAction('favorite')}
               disabled={updateStatus === 'saving'}
-              className="p-3 rounded-xl border-2 text-purple-600 bg-purple-50 border-purple-200 hover:bg-purple-100 transition-colors disabled:opacity-50"
+              className="p-3 rounded-xl border-2 text-purple-400 bg-purple-900/50 border-purple-700 hover:bg-purple-900 transition-colors disabled:opacity-50"
             >
               <Heart size={24} className="mx-auto" />
             </button>
             <button
               onClick={() => handleAction('keep')}
               disabled={updateStatus === 'saving'}
-              className="p-3 rounded-xl border-2 text-green-600 bg-green-50 border-green-200 hover:bg-green-100 transition-colors disabled:opacity-50"
+              className="p-3 rounded-xl border-2 text-green-400 bg-green-900/50 border-green-700 hover:bg-green-900 transition-colors disabled:opacity-50"
             >
               <ChevronRight size={24} className="mx-auto" />
             </button>
@@ -657,14 +657,14 @@ export default function LoanDataCurator() {
             <button
               onClick={previousDataPoint}
               disabled={currentIndex === 0 || updateStatus === 'saving'}
-              className="p-2 text-gray-600 hover:bg-white hover:shadow-md rounded-lg transition-all disabled:opacity-50"
+              className="p-2 text-gray-400 hover:bg-gray-700 hover:shadow-lg rounded-lg transition-all disabled:opacity-50"
             >
               <ChevronLeft size={20} />
             </button>
             <button
               onClick={nextDataPoint}
               disabled={currentIndex >= dataPoints.length - 1 || updateStatus === 'saving'}
-              className="p-2 text-gray-600 hover:bg-white hover:shadow-md rounded-lg transition-all disabled:opacity-50"
+              className="p-2 text-gray-400 hover:bg-gray-700 hover:shadow-lg rounded-lg transition-all disabled:opacity-50"
             >
               <ChevronRight size={20} />
             </button>
@@ -677,30 +677,30 @@ export default function LoanDataCurator() {
         </div>
       ) : (
         <div className="max-w-md mx-auto text-center">
-          <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+          <div className="bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700">
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Section Complete!</h2>
-            <p className="text-gray-600 mb-6">
+            <h2 className="text-2xl font-bold text-gray-100 mb-2">Section Complete!</h2>
+            <p className="text-gray-400 mb-6">
               You've finished this view. {stats.total - stats.reviewed} records remaining overall.
             </p>
             <div className="grid grid-cols-3 gap-4 text-sm mb-6">
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{stats.keep}</div>
-                <div className="text-gray-600">Kept</div>
+                <div className="text-2xl font-bold text-green-400">{stats.keep}</div>
+                <div className="text-gray-400">Kept</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">{stats.favorite}</div>
-                <div className="text-gray-600">Favorites</div>
+                <div className="text-2xl font-bold text-purple-400">{stats.favorite}</div>
+                <div className="text-gray-400">Favorites</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-red-600">{stats.delete}</div>
-                <div className="text-gray-600">Deleted</div>
+                <div className="text-2xl font-bold text-red-400">{stats.delete}</div>
+                <div className="text-gray-400">Deleted</div>
               </div>
             </div>
             {stats.total - stats.reviewed > 0 && (
               <button
                 onClick={() => window.location.reload()}
-                className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+                className="bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-indigo-600 transition-colors"
               >
                 Continue with Remaining Records
               </button>
@@ -711,28 +711,28 @@ export default function LoanDataCurator() {
 
       {/* Notes Modal */}
       {showNotes && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-sm">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">Add Notes</h3>
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+          <div className="bg-gray-800 rounded-xl p-6 w-full max-w-sm border border-gray-700">
+            <h3 className="text-lg font-bold text-gray-100 mb-4">Add Notes</h3>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Enter your notes about this data point..."
-              className="w-full p-3 border border-gray-300 rounded-lg resize-none"
+              className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg resize-none text-gray-200"
               rows={4}
               autoFocus
             />
             <div className="flex space-x-3 mt-4">
               <button
                 onClick={() => setShowNotes(false)}
-                className="flex-1 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex-1 py-2 text-gray-300 border border-gray-600 rounded-lg hover:bg-gray-700 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleNotesSubmit}
                 disabled={updateStatus === 'saving'}
-                className="flex-1 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                className="flex-1 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors disabled:opacity-50"
               >
                 Save & Keep
               </button>
