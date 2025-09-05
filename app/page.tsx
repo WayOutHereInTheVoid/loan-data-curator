@@ -1,12 +1,12 @@
-‘use client’
+'use client'
 
-import React, { useState, useEffect, useRef } from ‘react’;
-import { createClient } from ‘@supabase/supabase-js’;
-import { ChevronLeft, ChevronRight, Heart, Trash2, MessageSquare, RotateCcw, BarChart3, AlertCircle, CheckCircle, Search, CheckSquare, X } from ‘lucide-react’;
+import React, { useState, useEffect, useRef } from 'react';
+import { createClient } from '@supabase/supabase-js';
+import { ChevronLeft, ChevronRight, Heart, Trash2, MessageSquare, RotateCcw, BarChart3, AlertCircle, CheckCircle, Search, CheckSquare, X } from 'lucide-react';
 
 // Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ‘https://ueedkletrkemdrxbixpu.supabase.co’;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ‘eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlZWRrbGV0cmtlbWRyeGJpeHB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU4NTczMjYsImV4cCI6MjA1MTQzMzMyNn0.Js8dQBEPxNuFxv7vxRBcOLEz-GVfXMKJHO3sEMTFGUk’;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ueedkletrkemdrxbixpu.supabase.co';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlZWRrbGV0cmtlbWRyeGJpeHB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU4NTczMjYsImV4cCI6MjA1MTQzMzMyNn0.Js8dQBEPxNuFxv7vxRBcOLEz-GVfXMKJHO3sEMTFGUk';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Utility function to safely extract error messages
@@ -14,19 +14,19 @@ const getErrorMessage = (error: unknown): string => {
 if (error instanceof Error) {
 return error.message;
 }
-if (typeof error === ‘string’) {
+if (typeof error === 'string') {
 return error;
 }
-if (error && typeof error === ‘object’ && ‘message’ in error) {
+if (error && typeof error === 'object' && 'message' in error) {
 return String(error.message);
 }
-return ‘An unexpected error occurred’;
+return 'An unexpected error occurred';
 };
 
 interface DataPoint {
 Key: string;
 Category: string;
-‘Data Point’: string;
+'Data Point': string;
 status?: string;
 review_status?: string;
 notes?: string;
@@ -46,15 +46,15 @@ use: 0,
 pending: 0
 });
 const [showNotes, setShowNotes] = useState(false);
-const [notes, setNotes] = useState(’’);
+const [notes, setNotes] = useState('');
 const [loading, setLoading] = useState(true);
 const [showStats, setShowStats] = useState(false);
-const [selectedCategory, setSelectedCategory] = useState(‘all’);
-const [statusFilter, setStatusFilter] = useState(‘all’); // keep, favorite, all
+const [selectedCategory, setSelectedCategory] = useState('all');
+const [statusFilter, setStatusFilter] = useState('all'); // keep, favorite, all
 const [categories, setCategories] = useState<string[]>([]);
 const [actionHistory, setActionHistory] = useState<any[]>([]);
-const [updateStatus, setUpdateStatus] = useState<‘idle’ | ‘saving’ | ‘success’ | ‘error’>(‘idle’);
-const [errorMessage, setErrorMessage] = useState(’’);
+const [updateStatus, setUpdateStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
+const [errorMessage, setErrorMessage] = useState('');
 const cardRef = useRef<HTMLDivElement>(null);
 const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -76,7 +76,6 @@ let page = 0;
 const pageSize = 1000;
 let hasMore = true;
 
-```
   console.log('Loading keep and favorite records...');
 
   while (hasMore) {
@@ -134,19 +133,16 @@ let hasMore = true;
 } finally {
   setLoading(false);
 }
-```
-
 };
 
 const loadStats = async () => {
 try {
 // Get stats for keep and favorite items only
 const { data: allData, error } = await supabase
-.from(‘DataPts’)
-.select(‘review_status’)
-.in(‘status’, [‘keep’, ‘favorite’]);
+.from('DataPts')
+.select('review_status')
+.in('status', ['keep', 'favorite']);
 
-```
   if (error) {
     throw error;
   }
@@ -164,18 +160,15 @@ const { data: allData, error } = await supabase
 } catch (error) {
   console.error('Error loading stats:', error);
 }
-```
-
 };
 
 const loadCategories = async () => {
 try {
 const { data, error } = await supabase
-.from(‘DataPts’)
-.select(‘Category’)
-.in(‘status’, [‘keep’, ‘favorite’]);
+.from('DataPts')
+.select('Category')
+.in('status', ['keep', 'favorite']);
 
-```
   if (error) {
     throw error;
   }
@@ -186,14 +179,11 @@ const { data, error } = await supabase
 } catch (error) {
   console.error('Error loading categories:', error);
 }
-```
-
 };
 
-const updateDataPoint = async (reviewStatus: string, noteText = ‘’) => {
+const updateDataPoint = async (reviewStatus: string, noteText = '') => {
 if (!currentDataPoint) return;
 
-```
 setUpdateStatus('saving');
 
 try {
@@ -252,8 +242,6 @@ try {
     setErrorMessage('');
   }, 5000);
 }
-```
-
 };
 
 const nextDataPoint = () => {
@@ -275,9 +263,8 @@ setCurrentDataPoint(dataPoints[prevIndex]);
 };
 
 const handleAction = (action: string) => {
-if (updateStatus === ‘saving’) return;
+if (updateStatus === 'saving') return;
 
-```
 switch (action) {
   case 'use':
     updateDataPoint('use');
@@ -292,20 +279,17 @@ switch (action) {
     setShowNotes(true);
     break;
 }
-```
-
 };
 
 const handleNotesSubmit = () => {
-updateDataPoint(‘research_further’, notes);
+updateDataPoint('research_further', notes);
 setShowNotes(false);
-setNotes(’’);
+setNotes('');
 };
 
 const undoLastAction = async () => {
-if (actionHistory.length === 0 || updateStatus === ‘saving’) return;
+if (actionHistory.length === 0 || updateStatus === 'saving') return;
 
-```
 const lastAction = actionHistory[actionHistory.length - 1];
 
 setUpdateStatus('saving');
@@ -347,37 +331,31 @@ try {
     setErrorMessage('');
   }, 5000);
 }
-```
-
 };
 
 // Touch/Mouse handlers for swipe functionality
 const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
-if (updateStatus === ‘saving’) return;
-const point = ‘touches’ in e ? e.touches[0] : e;
+if (updateStatus === 'saving') return;
+const point = 'touches' in e ? e.touches[0] : e;
 setDragStart({ x: point.clientX, y: point.clientY });
 setIsDragging(true);
 };
 
 const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
-if (!isDragging || updateStatus === ‘saving’) return;
+if (!isDragging || updateStatus === 'saving') return;
 e.preventDefault();
 
-```
 const point = 'touches' in e ? e.touches[0] : e;
 const deltaX = point.clientX - dragStart.x;
 const deltaY = point.clientY - dragStart.y;
 
 setDragOffset({ x: deltaX, y: deltaY });
-```
-
 };
 
 const handleEnd = () => {
 if (!isDragging) return;
 setIsDragging(false);
 
-```
 const threshold = 100;
 const { x, y } = dragOffset;
 
@@ -400,16 +378,13 @@ if (Math.abs(x) > threshold || Math.abs(y) > threshold) {
 }
 
 setDragOffset({ x: 0, y: 0 });
-```
-
 };
 
 // Keyboard shortcuts
 useEffect(() => {
 const handleKeyPress = (e: KeyboardEvent) => {
-if (showNotes || updateStatus === ‘saving’) return;
+if (showNotes || updateStatus === 'saving') return;
 
-```
   switch (e.key.toLowerCase()) {
     case 'u':
       if (e.ctrlKey || e.metaKey) return; // Don't interfere with browser undo
@@ -439,8 +414,6 @@ if (showNotes || updateStatus === ‘saving’) return;
 
 window.addEventListener('keydown', handleKeyPress);
 return () => window.removeEventListener('keydown', handleKeyPress);
-```
-
 }, [showNotes, currentDataPoint, updateStatus]);
 
 if (loading) {
@@ -470,21 +443,20 @@ return (
 <div className="flex space-x-2">
 <button
 onClick={() => setShowStats(!showStats)}
-className=“p-2 text-blue-300 hover:bg-blue-700 rounded-lg transition-colors”
+className="p-2 text-blue-300 hover:bg-blue-700 rounded-lg transition-colors"
 >
 <BarChart3 size={20} />
 </button>
 <button
 onClick={undoLastAction}
-disabled={actionHistory.length === 0 || updateStatus === ‘saving’}
-className=“p-2 text-blue-300 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50”
+disabled={actionHistory.length === 0 || updateStatus === 'saving'}
+className="p-2 text-blue-300 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50"
 >
 <RotateCcw size={20} />
 </button>
 </div>
 </div>
 
-```
       {/* Update Status */}
       {updateStatus !== 'idle' && (
         <div className={`mb-4 p-2 rounded-lg flex items-center gap-2 text-sm ${
@@ -772,7 +744,5 @@ className=“p-2 text-blue-300 hover:bg-blue-700 rounded-lg transition-colors di
     </div>
   )}
 </div>
-```
-
 );
 }
