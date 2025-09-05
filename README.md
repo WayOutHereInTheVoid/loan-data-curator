@@ -1,6 +1,6 @@
 # Loan Data Curator
 
-A swipe-based loan data point curation tool built with Next.js, React, TypeScript, and Supabase.
+A swipe-based loan data point curation tool built with Next.js, React, TypeScript, and Supabaseee. 
 
 ## Features
 
